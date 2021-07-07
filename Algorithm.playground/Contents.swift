@@ -141,3 +141,79 @@ class Solution_Problem59 {
         return result
     }
 }
+
+
+/*:
+ ![alternate text ](problem_spiral_matrix.jpg)
+*/
+class Solution_Problem54 {
+    func spiralOrder(_ matrix: [[Int]]) -> [Int] {
+        var tmpMartrix = matrix
+        let clearFlag = 1000
+        var result = [Int]()
+        
+        let rowCount = matrix.count
+        let colCount = matrix[0].count
+        
+        var row = 0
+        var col = 0
+        var value = 1
+        
+        while value <= rowCount * colCount {
+            while col < colCount && tmpMartrix[row][col] != clearFlag {
+                result.append(tmpMartrix[row][col])
+                tmpMartrix[row][col] = clearFlag
+                value += 1
+                col += 1
+            }
+
+            col -= 1
+            row += 1
+            while row < rowCount && tmpMartrix[row][col] != clearFlag {
+                result.append(tmpMartrix[row][col])
+                tmpMartrix[row][col] = clearFlag
+                value += 1
+                row += 1
+            }
+
+            row -= 1
+            col -= 1
+            while col >= 0 && tmpMartrix[row][col] != clearFlag {
+                result.append(tmpMartrix[row][col])
+                tmpMartrix[row][col] = clearFlag
+                value += 1
+                col -= 1
+            }
+
+            col += 1
+            row -= 1
+            while row >= 0 && tmpMartrix[row][col] != clearFlag {
+                result.append(tmpMartrix[row][col])
+                tmpMartrix[row][col] = clearFlag
+                value += 1
+                row -= 1
+            }
+
+            row += 1
+            col += 1
+        }
+        
+        return result
+    }
+}
+
+/*:
+ ![alternate text ](problem_merge_two_binary_trees.jpg)
+*/
+class Solution_Problem617 {
+    func mergeTrees(_ root1: TreeNode?, _ root2: TreeNode?) -> TreeNode? {
+        guard let root1 = root1 else { return root2 }
+        guard let root2 = root2 else { return root1 }
+        
+        let newRoot = TreeNode(root1.val + root2.val)
+        newRoot.left = mergeTrees(root1.left, root2.left)
+        newRoot.right = mergeTrees(root1.right, root2.right)
+        
+        return newRoot
+    }
+}
