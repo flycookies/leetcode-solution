@@ -217,3 +217,28 @@ class Solution_Problem617 {
         return newRoot
     }
 }
+
+/*:
+ ![alternate text ](problem_search_in_a_binary_search_tree.jpg)
+ */
+class Solution_Problem700 {
+    func searchBST(_ root: TreeNode?, _ val: Int) -> TreeNode? {
+        var tmpRoot = root
+        
+        while tmpRoot != nil {
+            if let currentRoot = tmpRoot {
+                if currentRoot.val == val {
+                    return tmpRoot
+                }
+                
+                if currentRoot.val < val {
+                    tmpRoot = currentRoot.right
+                } else {
+                    tmpRoot = currentRoot.left
+                }
+            }
+        }
+        
+        return tmpRoot
+    }
+}
