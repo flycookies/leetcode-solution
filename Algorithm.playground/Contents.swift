@@ -244,3 +244,118 @@ class Solution_Problem700 {
         return tmpRoot
     }
 }
+
+
+/*:
+ ![alternate text ](problem_increasing_order_search_tree.jpg)
+ */
+class Solution_Problem897 {
+    var nodes = [TreeNode]()
+    
+    func increasingBST(_ root: TreeNode?) -> TreeNode? {
+        if root == nil {
+            return nil
+        }
+        
+        inorderTraverse(root)
+        
+        for i in 0..<nodes.count {
+            nodes[i].left = nil;
+            nodes[i].right = nil
+            if i > 0 {
+                nodes[i - 1].right = nodes[i]
+            }
+        }
+        
+        return nodes[0]
+    }
+    
+    func inorderTraverse(_ root: TreeNode?) {
+        if root == nil {
+            return
+        }
+        
+        inorderTraverse(root?.left)
+        nodes.append(root!)
+        inorderTraverse(root?.right)
+    }
+}
+
+
+
+// Definition for a Node.
+public class Node {
+    public var val: Int
+    public var children: [Node]
+    public init(_ val: Int) {
+        self.val = val
+        self.children = []
+    }
+}
+
+/*:
+ ![alternate text ](problem_N_ary_tree_preorder_traversal.jpg)
+ */
+class Solution_Problem589 {
+    func preorder(_ root: Node?) -> [Int] {
+        var result = [Int]()
+        if let root = root {
+            result.append(root.val)
+            for node in root.children {
+                result.append(contentsOf: preorder(node))
+            }
+        }
+        
+        return result
+    }
+}
+
+
+/*:
+ ![alternate text ](problem_N_ary_tree_postorder_traversal.jpg)
+ */
+class Solution_Problem590 {
+    func postorder(_ root: Node?) -> [Int] {
+        var result = [Int]()
+        if let root = root {
+            for node in root.children {
+                result.append(contentsOf: postorder(node))
+            }
+            result.append(root.val)
+        }
+        
+        return result
+    }
+}
+
+/*:
+ ![alternate text ](problem_sum_of_root_to_leaf_binary_numbers.jpg)
+ */
+class Solution_Problem1022 {
+    func sumRootToLeaf(_ root: TreeNode?) -> Int {
+        var result = 0
+        var nodes = [TreeNode]()
+        if let root = root {
+            nodes.append(root)
+            
+            while nodes.count != 0 {
+                let firstNode = nodes.removeFirst()
+                if firstNode.left == nil && firstNode.right == nil {
+                    result += firstNode.val
+                }
+                
+                if let leftNode = firstNode.left {
+                    leftNode.val += firstNode.val * 2
+                    nodes.append(leftNode)
+                }
+                
+                if let rightNode = firstNode.right {
+                    rightNode.val += firstNode.val * 2
+                    nodes.append(rightNode)
+                }
+            }
+        }
+        
+        return result
+    }
+}
