@@ -359,3 +359,309 @@ class Solution_Problem1022 {
         return result
     }
 }
+
+/*:
+ ![alternate text ](problem_invert_binary_tree.jpg)
+ */
+class Solution_Problem226 {
+    func invertTree(_ root: TreeNode?) -> TreeNode? {
+        if root == nil {
+            return nil
+        }
+        
+        let left = invertTree(root?.right)
+        let right = invertTree(root?.left)
+        root?.left = left
+        root?.right = right
+        return root
+    }
+}
+
+
+/*:
+ ![alternate text ](problem_univalued_binary_tree.jpg)
+ */
+class Solution_Problem965 {
+    func isUnivalTree(_ root: TreeNode?) -> Bool {
+        var nodes = [TreeNode]()
+        var isUnival = true
+        
+        if let root = root {
+            let rooVal = root.val
+            nodes.append(root)
+            while nodes.count > 0 {
+                let parentNode = nodes.removeFirst()
+                if let leftChild = parentNode.left {
+                    if leftChild.val != rooVal {
+                        isUnival = false
+                        break
+                    } else {
+                        nodes.append(leftChild)
+                    }
+                }
+                
+                if let rightChild = parentNode.right {
+                    if rightChild.val != rooVal {
+                        isUnival = false
+                        break
+                    } else {
+                        nodes.append(rightChild)
+                    }
+                }
+            }
+        } else {
+            isUnival = false
+        }
+        
+        return isUnival
+    }
+}
+
+
+class Solution_Problem606 {
+    func tree2str(_ root: TreeNode?) -> String {
+        guard let root = root else { return "" }
+        
+        let rootValStr = "\(root.val)"
+        let leftSubTreeStr = tree2str(root.left)
+        let rightSubTreeStr = tree2str(root.right)
+        
+        if leftSubTreeStr.isEmpty && !rightSubTreeStr.isEmpty {
+            return rootValStr + "()(\(rightSubTreeStr))"
+        } else if !leftSubTreeStr.isEmpty && !rightSubTreeStr.isEmpty {
+            return rootValStr + "(\(leftSubTreeStr))(\(rightSubTreeStr))"
+        } else if !leftSubTreeStr.isEmpty && rightSubTreeStr.isEmpty {
+            return rootValStr + "(\(leftSubTreeStr))"
+        } else {
+            return rootValStr
+        }
+    }
+}
+
+
+class Solution_Problem100 {
+    func isSameTree(_ p: TreeNode?, _ q: TreeNode?) -> Bool {
+        if p == nil && q == nil {
+            return true
+        }
+        
+        guard let p = p, let q = q, p.val == q.val else {
+            return false
+        }
+        
+        return isSameTree(p.left, q.left) && isSameTree(p.right, q.right)
+    }
+}
+
+/*:
+ ![alternate text ](problem_sum_of_left_leaves.jpg)
+ */
+class Solution_Problem404 {
+    func sumOfLeftLeaves(_ root: TreeNode?) -> Int {
+        if root == nil {
+            return 0
+        }
+        
+        if let root = root, root.left == nil, root.right == nil {
+            return 0
+        }
+        
+        var result = 0
+        if let left = root?.left {
+            if left.left == nil && left.right == nil {
+                result += left.val
+            } else {
+                result += sumOfLeftLeaves(root?.left)
+            }
+        }
+        
+        result += sumOfLeftLeaves(root?.right)
+        
+        return result
+    }
+}
+
+class Solution_Problem257 {
+    var result = [String]()
+    
+    func binaryTreePaths(_ root: TreeNode?) -> [String] {
+        preorderTraversal(root: root, path: nil)
+        return result
+    }
+    
+    func preorderTraversal(root: TreeNode?, path: String?) {
+        guard let root = root else { return }
+        
+        if root.left == nil, root.right == nil {
+            if let path = path {
+                result.append("\(path)->\(root.val)")
+            } else {
+                result.append("\(root.val)")
+            }
+        }
+        
+        var currentPath: String? = nil
+        if let path = path {
+            currentPath = "\(path)->\(root.val)"
+        } else {
+            currentPath = "\(root.val)"
+        }
+        
+        preorderTraversal(root: root.left, path: currentPath)
+        preorderTraversal(root: root.right, path: currentPath)
+    }
+}
+
+
+class Solution_Problem101 {
+    func isSymmetric(_ root: TreeNode?) -> Bool {
+        if root == nil {
+            return true
+        }
+        
+        return isSymmetric(root?.left, root?.right)
+    }
+    
+    func isSymmetric(_ root1: TreeNode?, _ root2: TreeNode?) -> Bool {
+        if root1 == nil && root2 == nil {
+            return true
+        }
+        
+        if root1?.val != root2?.val {
+            return false
+        }
+        
+        return isSymmetric(root1?.left, root2?.right) && isSymmetric(root1?.right, root2?.left)
+    }
+}
+
+
+/*:
+ ![alternate text ](problem_deepest_leaves_sum.jpg)
+ */
+class Solution_Problem1302 {
+    func deepestLeavesSum(_ root: TreeNode?) -> Int {
+        guard let root = root else {
+            return 0
+        }
+        
+        var levelAndNodes = [(level: Int, node: TreeNode)]()
+        levelAndNodes.append((level: 1, node: root))
+        var sum = 0;
+        var currentLevel = 1;
+        
+        while !levelAndNodes.isEmpty {
+            let levelAndNode = levelAndNodes.removeFirst()
+            if levelAndNode.level == currentLevel {
+                sum += levelAndNode.node.val
+            } else if (levelAndNode.level > currentLevel) {
+                sum = levelAndNode.node.val
+                currentLevel = levelAndNode.level
+            }
+            
+            if let left = levelAndNode.node.left {
+                levelAndNodes.append((level: levelAndNode.level + 1, node: left))
+            }
+            
+            if let right = levelAndNode.node.right {
+                levelAndNodes.append((level: levelAndNode.level + 1, node: right))
+            }
+        }
+        
+        return sum
+    }
+}
+
+
+/*:
+ ![alternate text ](problem_minimum_absolute_difference_in_BST.jpg)
+*/
+class Solution_Problem530 {
+    var preValue = -1000000
+    var minDiff = Int.max
+    func getMinimumDifference(_ root: TreeNode?) -> Int {
+        inorderTraversav(root: root)
+        return minDiff
+    }
+    
+    func inorderTraversav(root: TreeNode?) {
+        guard let root = root else {
+            return
+        }
+        
+        inorderTraversav(root: root.left)
+        
+        let diffToPreValue = root.val - preValue
+        if diffToPreValue < minDiff {
+            minDiff = diffToPreValue
+        }
+        
+        preValue = root.val
+        
+        inorderTraversav(root: root.right)
+    }
+}
+
+/*:
+ ![alternate text ](problem_lowest_common_ancestor_of_a_binary_search_tree.jpg)
+*/
+class Solution_Problem235 {
+    func lowestCommonAncestor(_ root: TreeNode?, _ p: TreeNode?, _ q: TreeNode?) -> TreeNode? {
+        guard let p = p, let q = q else { return nil }
+        var pNodePath = [TreeNode]()
+        var qNodePath = [TreeNode]()
+        
+        var currentNode = root
+        while currentNode != nil {
+            if let tmpCurrentNode = currentNode {
+                pNodePath.append(tmpCurrentNode)
+                if tmpCurrentNode.val == p.val {
+                    break
+                } else if tmpCurrentNode.val > p.val {
+                    currentNode = currentNode?.left
+                } else {
+                    currentNode = currentNode?.right
+                }
+            }
+        }
+        
+        currentNode = root
+        while currentNode != nil {
+            if let tmpCurrentNode = currentNode {
+                qNodePath.append(tmpCurrentNode)
+                if tmpCurrentNode.val == q.val {
+                    break
+                } else if tmpCurrentNode.val > q.val {
+                    currentNode = currentNode?.left
+                } else {
+                    currentNode = currentNode?.right
+                }
+            }
+        }
+        
+        pNodePath = pNodePath.reversed()
+        qNodePath = qNodePath.reversed()
+        
+        if pNodePath.count > qNodePath.count {
+            let diff = pNodePath.count - qNodePath.count
+            var index = 0
+            while pNodePath[index + diff].val != qNodePath[index].val {
+                index += 1
+            }
+            return qNodePath[index]
+        } else if pNodePath.count < qNodePath.count {
+            let diff = qNodePath.count - pNodePath.count
+            var index = 0
+            while qNodePath[index + diff].val != pNodePath[index].val {
+                index += 1
+            }
+            return pNodePath[index]
+        } else {
+            var index = 0
+            while qNodePath[index].val != pNodePath[index].val {
+                index += 1
+            }
+            return pNodePath[index]
+        }
+    }
+}
